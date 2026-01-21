@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centered Black Door Transition</title>
+    <title>Fixed Door 3 Zoom</title>
     <style>
         :root {
             --bg-color: #000000;
             --door-black: #000000;
             --white-void: #ffffff;
-            --zoom-speed: 4s;
+            --zoom-speed: 3.5s;
             --slide-speed: 2s;
+            /* door width (170) + gap (150) = 320px per door step */
         }
 
         body, html {
@@ -23,7 +24,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 2000px;
+            perspective: 1200px; /* Lower perspective makes the zoom feel more "into" the door */
         }
 
         #final-page {
@@ -36,19 +37,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 1s ease-in;
             pointer-events: none;
         }
 
-        /* The container that holds the row of doors */
         .scene-wrapper {
             display: flex;
             gap: 150px;
             transform-style: preserve-3d;
-            /* Animation: Slide the row, then zoom through the center */
+            /* This ensures the zoom happens from the perspective of Door 3 */
+            transform-origin: center center; 
             animation: 
                 slideAndLock var(--slide-speed) cubic-bezier(0.2, 1, 0.3, 1) forwards,
-                zoomForward var(--zoom-speed) cubic-bezier(0.7, 0, 0.3, 1) forwards;
+                zoomToDoor3 var(--zoom-speed) cubic-bezier(0.7, 0, 0.3, 1) forwards;
             animation-delay: 0.5s, calc(var(--slide-speed) + 0.5s);
         }
 
@@ -57,8 +57,8 @@
             height: 320px;
             position: relative;
             transform-style: preserve-3d;
-            background: var(--white-void); /* White room visible when open */
-            border: 8px solid #000000; /* Thick black frame as requested */
+            background: var(--white-void);
+            border: 8px solid #000000; 
             box-sizing: border-box;
         }
 
@@ -76,16 +76,9 @@
             align-items: center;
             font-family: 'Arial Black', sans-serif;
             font-size: 80px;
-            transition: transform 1.5s ease-in-out;
         }
 
-        /* Number for closed door 3 (White) */
-        .white-num {
-            color: white;
-            pointer-events: none;
-        }
-
-        /* Number inside the frames (Black) */
+        .white-num { color: white; }
         .inner-num {
             position: absolute;
             width: 100%;
@@ -99,27 +92,22 @@
             z-index: 1;
         }
 
-        /* Logic for Door 1 & 2 starting open */
-        .pre-open .door-leaf {
-            transform: rotateY(-110deg);
-        }
+        .pre-open .door-leaf { transform: rotateY(-110deg); }
 
-        /* Logic for Target Door opening during zoom */
         .target .door-leaf {
             animation: openTarget 1.5s forwards;
-            animation-delay: calc(var(--slide-speed) + 1s);
+            animation-delay: calc(var(--slide-speed) + 0.8s);
         }
 
-        /* Keyframes */
         @keyframes slideAndLock {
             from { transform: translateX(100vw); }
-            /* centers the 3rd door in the middle of the viewport */
-            to { transform: translateX(0); } 
+            /* Shifts the wrapper left so Door 3 is at the screen center */
+            to { transform: translateX(-320px); } 
         }
 
-        @keyframes zoomForward {
-            0% { transform: translateZ(0); }
-            100% { transform: translateZ(3500px); opacity: 0; }
+        @keyframes zoomToDoor3 {
+            0% { transform: translateX(-320px) translateZ(0); }
+            100% { transform: translateX(-320px) translateZ(2500px); opacity: 0; }
         }
 
         @keyframes openTarget {
@@ -127,15 +115,44 @@
         }
 
         .reveal {
-            opacity: 1 !important;
-            pointer-events: all !important;
+            animation: fadeIn 1s forwards;
+            animation-delay: calc(var(--slide-speed) + var(--zoom-speed) - 0.5s);
         }
+
+        @keyframes fadeIn { to { opacity: 1; pointer-events: all; } }
     </style>
 </head>
 <body>
 
     <div id="final-page">
-        <h1 style="font-family: 'Arial Black', sans-serif; font-size: 4rem;">ACCESS GRANTED</h1>
+        <h1 style="font-family: 'Arial Black', sans-serif; font-size: 4rem;">WELCOME</h1>
     </div>
 
-    <div class
+    <div class="scene-wrapper">
+        <div class="door-frame pre-open">
+            <div class="inner-num">1</div>
+            <div class="door-leaf"></div>
+        </div>
+
+        <div class="door-frame pre-open">
+            <div class="inner-num">2</div>
+            <div class="door-leaf"></div>
+        </div>
+
+        <div class="door-frame target">
+            <div class="inner-num">3</div>
+            <div class="door-leaf">
+                <div class="white-num">3</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('final-page').classList.add('reveal');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
