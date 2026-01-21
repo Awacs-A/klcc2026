@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sliding Door Transition</title>
+    <title>Sleek Door Transition</title>
     <style>
         :root {
             --bg-color: #000000;
-            --door-color: #e0e0e0; 
-            --zoom-speed: 3s;
+            --door-surface: #1a1a1a; /* Dark sleek door surface */
+            --frame-color: #333333;   /* Visible frame */
+            --text-color: #ffffff;
+            --zoom-speed: 3.5s;
             --slide-speed: 2s;
         }
 
@@ -22,140 +24,140 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1500px;
+            perspective: 2000px;
         }
 
-        #page-content {
+        /* Final content page */
+        #final-page {
             position: absolute;
             opacity: 0;
             text-align: center;
-            color: white;
-            font-family: 'Arial', sans-serif;
+            color: black; /* Text is black because it fades into white */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             z-index: 1;
         }
 
-        /* The container that slides in from the right */
-        .scene-container {
+        .scene-wrapper {
             display: flex;
-            gap: 150px;
-            align-items: center;
-            position: relative;
+            gap: 120px;
             transform-style: preserve-3d;
-            /* Slide from right animation */
+            /* Slide in then Zoom through */
             animation: 
-                slideIn var(--slide-speed) cubic-bezier(0.25, 1, 0.5, 1) forwards,
-                zoomThrough var(--zoom-speed) cubic-bezier(0.7, 0, 0.3, 1) forwards;
-            animation-delay: 0s, var(--slide-speed); /* Zoom starts after slide ends */
+                slideFromRight var(--slide-speed) cubic-bezier(0.2, 1, 0.3, 1) forwards,
+                zoomIn var(--zoom-speed) cubic-bezier(0.7, 0, 0.3, 1) forwards;
+            animation-delay: 0.5s, calc(var(--slide-speed) + 0.5s);
         }
 
-        .door-frame {
-            width: 140px;
-            height: 260px;
+        /* Door Structure */
+        .door-container {
+            width: 160px;
+            height: 300px;
             position: relative;
             transform-style: preserve-3d;
-            background: white; /* This makes the "inside" pure white */
-            border: 2px solid #333;
+            background: #ffffff; /* Pure white interior visible when open */
+            border: 6px solid var(--frame-color); /* The dark door frame */
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
         }
 
-        .door {
+        .door-leaf {
             width: 100%;
             height: 100%;
-            background-color: var(--door-color);
+            background-color: var(--door-surface);
             position: absolute;
+            top: 0;
+            left: 0;
             transform-origin: left;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: inset -2px 0 5px rgba(0,0,0,0.2);
             z-index: 2;
+            transition: transform 1.5s ease-in-out;
         }
 
-        .door-number {
-            font-family: 'Georgia', serif;
-            font-size: 40px;
-            color: #333;
-            border: 2px solid #333;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
+        /* Numbers matching the image style */
+        .number {
+            font-family: 'Arial Black', Gadget, sans-serif;
+            font-size: 60px;
+            color: var(--text-color);
+            user-select: none;
         }
 
+        /* Handle matching your image */
         .handle {
-            width: 20px;
-            height: 5px;
-            background: #111;
             position: absolute;
             right: 15px;
-            top: 50%;
+            width: 25px;
+            height: 5px;
+            background: #444;
+            border-radius: 2px;
         }
 
-        /* Doors before the target are already open */
-        .already-open .door {
-            transform: rotateY(-110deg);
+        /* PREVIOUS DOORS: Already open and pure white inside */
+        .is-open .door-leaf {
+            transform: rotateY(-115deg);
         }
 
-        /* Target Door Animation */
-        .target-door .door {
-            animation: openDoor 1.2s forwards;
-            animation-delay: calc(var(--slide-speed) + 0.5s);
+        /* TARGET DOOR: Opens as we zoom */
+        .target .door-leaf {
+            animation: openAction 1.5s forwards;
+            animation-delay: calc(var(--slide-speed) + 1s);
         }
 
-        /* Animations */
-        @keyframes slideIn {
-            from { transform: translateX(150vw); }
+        /* Keyframes */
+        @keyframes slideFromRight {
+            from { transform: translateX(120vw); }
             to { transform: translateX(0); }
         }
 
-        @keyframes zoomThrough {
-            0% { transform: translateZ(0); opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: translateZ(2500px); opacity: 0; }
+        @keyframes zoomIn {
+            0% { transform: translateZ(0) translateX(0); }
+            /* Focus on the 3rd door (the target) by offsetting X */
+            100% { transform: translateZ(3500px) translateX(-280px); opacity: 0; }
         }
 
-        @keyframes openDoor {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(-115deg); }
+        @keyframes openAction {
+            to { transform: rotateY(-120deg); }
         }
 
-        .reveal-content {
-            animation: fadeIn 1s forwards;
-            animation-delay: calc(var(--slide-speed) + var(--zoom-speed) - 0.5s);
+        /* Fade in the final content as the white void fills the screen */
+        .reveal-page {
+            animation: fadeInPage 1.5s forwards;
+            animation-delay: calc(var(--slide-speed) + var(--zoom-speed) - 0.8s);
         }
 
-        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes fadeInPage {
+            to { opacity: 1; background: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;}
+        }
 
     </style>
 </head>
 <body>
 
-    <div id="page-content">
-        <h1>ACCESS GRANTED</h1>
-        <p>You have entered the secure area.</p>
+    <div id="final-page">
+        <div>
+            <h1 style="font-size: 4rem; margin: 0;">ENTERED</h1>
+            <p style="font-size: 1.5rem;">The transition is complete.</p>
+        </div>
     </div>
 
-    <div class="scene-container">
-        <div class="door-frame already-open">
-            <div class="door">
-                <div class="door-number">1</div>
+    <div class="scene-wrapper">
+        <div class="door-container is-open">
+            <div class="door-leaf">
+                <div class="number">1</div>
                 <div class="handle"></div>
             </div>
         </div>
 
-        <div class="door-frame already-open">
-            <div class="door">
-                <div class="door-number">2</div>
+        <div class="door-container is-open">
+            <div class="door-leaf">
+                <div class="number">2</div>
                 <div class="handle"></div>
             </div>
         </div>
 
-        <div class="door-frame target-door">
-            <div class="door">
-                <div class="door-number">3</div>
+        <div class="door-container target">
+            <div class="door-leaf">
+                <div class="number">3</div>
                 <div class="handle"></div>
             </div>
         </div>
@@ -163,7 +165,10 @@
 
     <script>
         window.addEventListener('load', () => {
-            document.getElementById('page-content').classList.add('reveal-content');
+            // Reveal the content page synchronized with the zoom
+            setTimeout(() => {
+                document.getElementById('final-page').classList.add('reveal-page');
+            }, 100);
         });
     </script>
 </body>
