@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sleek Door Transition</title>
+    <title>Sleek Interior Number Transition</title>
     <style>
         :root {
             --bg-color: #000000;
-            --door-surface: #1a1a1a; /* Dark sleek door surface */
-            --frame-color: #333333;   /* Visible frame */
-            --text-color: #ffffff;
-            --zoom-speed: 3.5s;
+            --door-surface: #e0e0e0; /* Light grey door leaf */
+            --frame-color: #1a1a1a;   /* Dark sleek frame */
+            --zoom-speed: 4s;
             --slide-speed: 2s;
         }
 
@@ -27,36 +26,39 @@
             perspective: 2000px;
         }
 
-        /* Final content page */
         #final-page {
             position: absolute;
             opacity: 0;
             text-align: center;
-            color: black; /* Text is black because it fades into white */
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: black;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             z-index: 1;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
         }
 
         .scene-wrapper {
             display: flex;
-            gap: 120px;
+            gap: 150px;
             transform-style: preserve-3d;
-            /* Slide in then Zoom through */
             animation: 
                 slideFromRight var(--slide-speed) cubic-bezier(0.2, 1, 0.3, 1) forwards,
-                zoomIn var(--zoom-speed) cubic-bezier(0.7, 0, 0.3, 1) forwards;
+                zoomToTarget var(--zoom-speed) cubic-bezier(0.7, 0, 0.3, 1) forwards;
             animation-delay: 0.5s, calc(var(--slide-speed) + 0.5s);
         }
 
-        /* Door Structure */
         .door-container {
             width: 160px;
             height: 300px;
             position: relative;
             transform-style: preserve-3d;
-            background: #ffffff; /* Pure white interior visible when open */
-            border: 6px solid var(--frame-color); /* The dark door frame */
-            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+            background: #ffffff; /* Pure white void inside */
+            border: 8px solid var(--frame-color);
         }
 
         .door-leaf {
@@ -64,100 +66,113 @@
             height: 100%;
             background-color: var(--door-surface);
             position: absolute;
-            top: 0;
-            left: 0;
             transform-origin: left;
+            transform-style: preserve-3d; /* Allows back-face content */
+            transition: transform 1.5s ease-in-out;
+            z-index: 2;
+        }
+
+        /* Front and Back of the door leaf */
+        .door-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2;
-            transition: transform 1.5s ease-in-out;
         }
 
-        /* Numbers matching the image style */
+        .door-back {
+            transform: rotateY(180deg);
+        }
+
         .number {
-            font-family: 'Arial Black', Gadget, sans-serif;
-            font-size: 60px;
-            color: var(--text-color);
-            user-select: none;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 70px;
+            color: #000000; /* Numbers are black */
         }
 
-        /* Handle matching your image */
+        /* Handle */
         .handle {
             position: absolute;
             right: 15px;
             width: 25px;
-            height: 5px;
-            background: #444;
+            height: 6px;
+            background: #222;
             border-radius: 2px;
+            top: 50%;
         }
 
-        /* PREVIOUS DOORS: Already open and pure white inside */
+        /* Pre-opened doors (1 and 2) */
         .is-open .door-leaf {
             transform: rotateY(-115deg);
         }
 
-        /* TARGET DOOR: Opens as we zoom */
+        /* Target door (3) animation */
         .target .door-leaf {
-            animation: openAction 1.5s forwards;
-            animation-delay: calc(var(--slide-speed) + 1s);
+            animation: openAction 1.8s forwards;
+            animation-delay: calc(var(--slide-speed) + 1.2s);
         }
 
-        /* Keyframes */
         @keyframes slideFromRight {
-            from { transform: translateX(120vw); }
+            from { transform: translateX(100vw); }
             to { transform: translateX(0); }
         }
 
-        @keyframes zoomIn {
+        @keyframes zoomToTarget {
             0% { transform: translateZ(0) translateX(0); }
-            /* Focus on the 3rd door (the target) by offsetting X */
-            100% { transform: translateZ(3500px) translateX(-280px); opacity: 0; }
+            /* Adjusted translateX (-310px) to center Door 3 perfectly */
+            100% { transform: translateZ(3000px) translateX(-310px); opacity: 0; }
         }
 
         @keyframes openAction {
             to { transform: rotateY(-120deg); }
         }
 
-        /* Fade in the final content as the white void fills the screen */
         .reveal-page {
             animation: fadeInPage 1.5s forwards;
-            animation-delay: calc(var(--slide-speed) + var(--zoom-speed) - 0.8s);
+            animation-delay: calc(var(--slide-speed) + var(--zoom-speed) - 0.5s);
         }
 
         @keyframes fadeInPage {
-            to { opacity: 1; background: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;}
+            to { opacity: 1; pointer-events: all; }
         }
-
     </style>
 </head>
 <body>
 
     <div id="final-page">
-        <div>
-            <h1 style="font-size: 4rem; margin: 0;">ENTERED</h1>
-            <p style="font-size: 1.5rem;">The transition is complete.</p>
-        </div>
+        <h1>BEYOND DOOR 3</h1>
     </div>
 
     <div class="scene-wrapper">
         <div class="door-container is-open">
             <div class="door-leaf">
-                <div class="number">1</div>
+                <div class="door-face door-front"></div>
+                <div class="door-face door-back">
+                    <div class="number">1</div>
+                </div>
                 <div class="handle"></div>
             </div>
         </div>
 
         <div class="door-container is-open">
             <div class="door-leaf">
-                <div class="number">2</div>
+                <div class="door-face door-front"></div>
+                <div class="door-face door-back">
+                    <div class="number">2</div>
+                </div>
                 <div class="handle"></div>
             </div>
         </div>
 
         <div class="door-container target">
             <div class="door-leaf">
-                <div class="number">3</div>
+                <div class="door-face door-front">
+                    <div class="number">3</div>
+                </div>
+                <div class="door-face door-back"></div>
                 <div class="handle"></div>
             </div>
         </div>
@@ -165,7 +180,6 @@
 
     <script>
         window.addEventListener('load', () => {
-            // Reveal the content page synchronized with the zoom
             setTimeout(() => {
                 document.getElementById('final-page').classList.add('reveal-page');
             }, 100);
