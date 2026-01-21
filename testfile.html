@@ -1,90 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Escape Intro</title>
+<meta charset="UTF-8">
+<title>Escape Intro</title>
 
-  <style>
-    /* ===== BASE ===== */
-    body {
-      margin: 0;
-      background: black;
-      color: white;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+<style>
+/* ===== BASE ===== */
+body {
+  margin: 0;
+  background: black;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
 
-    /* ===== OVERLAY ===== */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 1s ease;
-    }
+/* ===== OVERLAY ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.8s ease;
+}
 
-    .overlay.fade-out {
-      opacity: 0;
-    }
+.overlay.fade {
+  opacity: 0;
+}
 
-    /* ===== TRACK ===== */
-    .track {
-      display: flex;
-      gap: 70px;
-      transform: translateX(120vw);
-      transition: transform 4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
+/* ===== TRACK ===== */
+.track {
+  display: flex;
+  gap: 80px;
+  transform: translateX(120vw);
+  transition: transform 3.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-    /* ===== LOCK ===== */
-    .lock {
-      width: 180px;
-      opacity: 0.25;
-      transition: opacity 0.8s ease;
-    }
+/* ===== LOCK ===== */
+.lock {
+  width: 170px;
+  opacity: 0.25;
+  transition: opacity 0.6s ease;
+}
 
-    .lock.unlocked {
-      opacity: 0.6;
-    }
+.lock.unlocked {
+  opacity: 0.6;
+}
 
-    .lock.current {
-      opacity: 1;
-    }
+.lock.current {
+  opacity: 1;
+}
 
-    svg {
-      width: 100%;
-      display: block;
-    }
+/* ===== ZOOM ===== */
+.overlay.zoom {
+  transform: scale(3);
+  transition: transform 1.8s ease;
+}
 
-    /* ===== CAMERA ZOOM ===== */
-    .zoom {
-      transform: scale(3);
-      transition: transform 2s ease;
-    }
+svg {
+  width: 100%;
+  display: block;
+}
 
-    /* ===== PAGE CONTENT ===== */
-    .page {
-      opacity: 0;
-      padding: 80px;
-      transition: opacity 1s ease;
-    }
+/* ===== PAGE ===== */
+.page {
+  opacity: 0;
+  padding: 80px;
+  color: white;
+  transition: opacity 1s ease;
+}
 
-    .page.show {
-      opacity: 1;
-    }
-  </style>
+.page.show {
+  opacity: 1;
+}
+</style>
 </head>
 
 <body>
 
-<!-- 🔒 CINEMATIC INTRO -->
+<!-- INTRO OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="track" id="track">
 
     <!-- R1 -->
-    <div class="lock unlocked">
+    <div class="lock" data-index="0">
       <svg viewBox="0 0 120 160">
         <path d="M30 60 V38 C30 8 90 8 90 38 V60"
               fill="none" stroke="#555" stroke-width="12"
@@ -94,12 +94,12 @@
         <circle cx="60" cy="102" r="20"
                 fill="#000" stroke="#666" stroke-width="3"/>
         <text x="60" y="110" text-anchor="middle"
-              font-size="20" fill="#aaa" font-weight="bold">1</text>
+              font-size="20" fill="#888" font-weight="bold">1</text>
       </svg>
     </div>
 
     <!-- R2 -->
-    <div class="lock unlocked">
+    <div class="lock" data-index="1">
       <svg viewBox="0 0 120 160">
         <path d="M30 60 V38 C30 8 90 8 90 38 V60"
               fill="none" stroke="#555" stroke-width="12"
@@ -109,27 +109,27 @@
         <circle cx="60" cy="102" r="20"
                 fill="#000" stroke="#666" stroke-width="3"/>
         <text x="60" y="110" text-anchor="middle"
-              font-size="20" fill="#aaa" font-weight="bold">2</text>
+              font-size="20" fill="#888" font-weight="bold">2</text>
       </svg>
     </div>
 
     <!-- R3 (CURRENT) -->
-    <div class="lock current" id="current">
+    <div class="lock current" id="current" data-index="2">
       <svg viewBox="0 0 120 160">
         <path d="M30 60 V38 C30 8 90 8 90 38 V60"
-              fill="none" stroke="#777" stroke-width="12"
+              fill="none" stroke="#555" stroke-width="12"
               stroke-linecap="round"/>
         <rect x="18" y="60" width="84" height="86" rx="16"
-              fill="#0a0a0a" stroke="#777" stroke-width="4"/>
+              fill="#0a0a0a" stroke="#555" stroke-width="4"/>
         <circle cx="60" cy="102" r="20"
-                fill="#000" stroke="#888" stroke-width="3"/>
+                fill="#000" stroke="#666" stroke-width="3"/>
         <text x="60" y="110" text-anchor="middle"
-              font-size="20" fill="#fff" font-weight="bold">3</text>
+              font-size="20" fill="#bbb" font-weight="bold">3</text>
       </svg>
     </div>
 
     <!-- R4 -->
-    <div class="lock">
+    <div class="lock" data-index="3">
       <svg viewBox="0 0 120 160">
         <path d="M30 60 V38 C30 8 90 8 90 38 V60"
               fill="none" stroke="#444" stroke-width="12"
@@ -146,52 +146,52 @@
   </div>
 </div>
 
-<!-- ✅ REAL PAGE -->
+<!-- REAL PAGE -->
 <div class="page" id="page">
   <h1>Round 3</h1>
-  <p>Your escape-room content starts here.</p>
+  <p>Your puzzle content starts here.</p>
 </div>
 
 <script>
-  const track = document.getElementById("track");
-  const current = document.getElementById("current");
-  const overlay = document.getElementById("overlay");
-  const page = document.getElementById("page");
+const track = document.getElementById("track");
+const overlay = document.getElementById("overlay");
+const page = document.getElementById("page");
+const current = document.getElementById("current");
+const locks = document.querySelectorAll(".lock");
 
-  // Scroll past current lock
-  const offset =
-    window.innerWidth / 2 -
-    current.offsetLeft -
-    current.offsetWidth * 1.5;
+/* ---- CENTER CURRENT LOCK ---- */
+const offset =
+  window.innerWidth / 2 -
+  current.offsetLeft -
+  current.offsetWidth / 2;
 
-  requestAnimationFrame(() => {
-    track.style.transform = `translateX(${offset}px)`;
-  });
+requestAnimationFrame(() => {
+  track.style.transform = `translateX(${offset}px)`;
+});
 
-  // Unlock previous locks during scroll
-  setTimeout(() => {
-    document.querySelectorAll(".lock").forEach(l => {
-      if (!l.classList.contains("current")) {
-        l.classList.add("unlocked");
-      }
-    });
-  }, 1800);
+/* ---- UNLOCK PREVIOUS LOCKS (SEQUENCE) ---- */
+locks.forEach((lock, i) => {
+  if (i < current.dataset.index) {
+    setTimeout(() => {
+      lock.classList.add("unlocked");
+    }, 1400 + i * 300);
+  }
+});
 
-  // Camera zoom to black
-  setTimeout(() => {
-    overlay.classList.add("zoom");
-  }, 4200);
+/* ---- ZOOM + TRANSITION ---- */
+setTimeout(() => {
+  overlay.classList.add("zoom");
+}, 4200);
 
-  // Fade to page
-  setTimeout(() => {
-    overlay.classList.add("fade-out");
-    page.classList.add("show");
-  }, 5600);
+setTimeout(() => {
+  overlay.classList.add("fade");
+  page.classList.add("show");
+}, 5600);
 
-  setTimeout(() => {
-    overlay.remove();
-    document.body.style.overflow = "auto";
-  }, 6600);
+setTimeout(() => {
+  overlay.remove();
+  document.body.style.overflow = "auto";
+}, 6600);
 </script>
 
 </body>
