@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Round 3</title>
+
+  <style>
+    /* ===== BASE ===== */
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ===== OVERLAY ===== */
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      overflow: hidden;
+      transition: opacity 0.6s ease;
+    }
+
+    .lock-overlay.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ===== TRACK ===== */
+    .lock-track {
+      display: flex;
+      gap: 40px;
+      transform: translateX(100vw);
+      transition: transform 2.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ===== LOCK ===== */
+    .lock {
+      width: 110px;
+      opacity: 0.35;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    .lock.unlocked {
+      opacity: 0.6;
+    }
+
+    .lock.current {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+
+    svg {
+      width: 100%;
+      display: block;
+    }
+
+    /* ===== PAGE CONTENT ===== */
+    .page-content {
+      opacity: 0;
+      padding: 60px;
+      transition: opacity 0.8s ease;
+    }
+
+    .page-content.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🔒 LOCK INTRO OVERLAY -->
+<div class="lock-overlay" id="overlay">
+  <div class="lock-track" id="track">
+
+    <!-- R1 -->
+    <div class="lock unlocked">
+      <svg viewBox="0 0 120 160">
+        <path d="M35 60 V35 C35 10 85 10 85 35 V60"
+              fill="none" stroke="#444" stroke-width="10"
+              stroke-linecap="round"/>
+        <rect x="20" y="60" rx="14" ry="14"
+              width="80" height="80"
+              fill="#0b0b0b" stroke="#444" stroke-width="3"/>
+        <circle cx="60" cy="100" r="18" fill="#111" stroke="#555" stroke-width="2"/>
+        <text x="60" y="107" text-anchor="middle" font-size="18"
+              fill="#e5e7eb" font-weight="bold">1</text>
+      </svg>
+    </div>
+
+    <!-- R2 -->
+    <div class="lock unlocked">
+      <svg viewBox="0 0 120 160">
+        <path d="M35 60 V35 C35 10 85 10 85 35 V60"
+              fill="none" stroke="#444" stroke-width="10"
+              stroke-linecap="round"/>
+        <rect x="20" y="60" rx="14" ry="14"
+              width="80" height="80"
+              fill="#0b0b0b" stroke="#444" stroke-width="3"/>
+        <circle cx="60" cy="100" r="18" fill="#111" stroke="#555" stroke-width="2"/>
+        <text x="60" y="107" text-anchor="middle" font-size="18"
+              fill="#e5e7eb" font-weight="bold">2</text>
+      </svg>
+    </div>
+
+    <!-- R3 (CURRENT) -->
+    <div class="lock current" id="currentLock">
+      <svg viewBox="0 0 120 160">
+        <path d="M35 60 V35 C35 10 85 10 85 35 V60"
+              fill="none" stroke="#666" stroke-width="10"
+              stroke-linecap="round"/>
+        <rect x="20" y="60" rx="14" ry="14"
+              width="80" height="80"
+              fill="#0b0b0b" stroke="#666" stroke-width="3"/>
+        <circle cx="60" cy="100" r="18" fill="#111" stroke="#777" stroke-width="2"/>
+        <text x="60" y="107" text-anchor="middle" font-size="18"
+              fill="#ffffff" font-weight="bold">3</text>
+      </svg>
+    </div>
+
+    <!-- R4 -->
+    <div class="lock">
+      <svg viewBox="0 0 120 160">
+        <path d="M35 60 V35 C35 10 85 10 85 35 V60"
+              fill="none" stroke="#444" stroke-width="10"
+              stroke-linecap="round"/>
+        <rect x="20" y="60" rx="14" ry="14"
+              width="80" height="80"
+              fill="#0b0b0b" stroke="#444" stroke-width="3"/>
+        <circle cx="60" cy="100" r="18" fill="#111" stroke="#555" stroke-width="2"/>
+        <text x="60" y="107" text-anchor="middle" font-size="18"
+              fill="#e5e7eb" font-weight="bold">4</text>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<!-- ✅ REAL PAGE CONTENT -->
+<div class="page-content" id="content">
+  <h1>Round 3</h1>
+  <p>This is the actual puzzle page content.</p>
+</div>
+
+<script>
+  const track = document.getElementById("track");
+  const overlay = document.getElementById("overlay");
+  const content = document.getElementById("content");
+  const current = document.getElementById("currentLock");
+
+  // Center current lock
+  const centerOffset =
+    window.innerWidth / 2 -
+    current.offsetLeft -
+    current.offsetWidth / 2;
+
+  requestAnimationFrame(() => {
+    track.style.transform = `translateX(${centerOffset}px)`;
+  });
+
+  // Wait 1 second after scroll stops, then reveal page
+  setTimeout(() => {
+    overlay.classList.add("hide");
+    content.classList.add("show");
+  }, 3800);
+</script>
+
+</body>
+</html>
